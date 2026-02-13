@@ -94,6 +94,8 @@ export class PostsService {
             content: postData.content,
             auther
         })
+        await this.invalidateAllCacheData()
+
         return await this.postRepositry.save(newPost)
     }
 
@@ -108,11 +110,21 @@ export class PostsService {
         if (updateData.content) {
             post.content = updateData.content
         }
-        return await this.postRepositry.save(post)
+        const updatedPost = await this.postRepositry.save(post)
+        await this.cacheManager.del(`v1:post:${id}`)
+        await this.invalidateAllCacheData()
+        return updatedPost
     }
 
     async deletePost(id: number): Promise<Post> {
         const post = await this.findOne(id)
         return await this.postRepositry.remove(post)
+    }
+
+    private async invalidateAllCacheData(): Promise<void>{
+        for (const key of this.postListCacheKey) {
+            await this.cacheManager.del(key)
+        }
+        this.postListCacheKey.clear()
     }
 }
