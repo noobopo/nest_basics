@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseIntPipe, Post, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { createPostDto } from './dtos/create-post.dto';
 import { PostExistPipe } from './pipes/post-exist.pipe';
@@ -9,6 +9,8 @@ import { User, userRole } from 'src/auth/entities/user.entitie';
 import { Roles } from 'src/auth/decoraters/roles.decoraters';
 import { FindPostQuaryDto } from './dtos/find-post-quary.dto';
 import { IPaginationResponseFormat } from 'src/common/interface/pagination.interface';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from 'src/config/multer.config';
 
 @Controller('posts')
 export class PostsController {
@@ -27,9 +29,14 @@ export class PostsController {
 
     @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.CREATED)
+    @UseInterceptors(FileInterceptor('image', multerConfig))
     @Post('create')
-    async createPost(@Body() createData: createPostDto, @CurrentUser() user: any) {
-        return await this.postService.createPost(createData, user)
+    async createPost(
+        @Body() createData: createPostDto,
+        @UploadedFile() file: Express.Multer.File,
+        @CurrentUser() user: any,
+    ) {
+        return await this.postService.createPost(createData, file, user);
     }
 
     @UseGuards(JwtAuthGuard)

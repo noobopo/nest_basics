@@ -9,6 +9,7 @@ import { User, userRole } from 'src/auth/entities/user.entitie';
 import { Cache, CACHE_MANAGER } from '@nestjs/cache-manager';
 import { FindPostQuaryDto } from './dtos/find-post-quary.dto';
 import { IPaginationResponseFormat } from 'src/common/interface/pagination.interface';
+import { UploadService } from 'src/upload/upload.service';
 
 @Injectable()
 export class PostsService {
@@ -17,6 +18,7 @@ export class PostsService {
     constructor(
         @InjectRepository(Post)
         private postRepositry: Repository<Post>,
+        private uploadService: UploadService,
         @Inject(CACHE_MANAGER) private cacheManager: Cache
     ) { }
 
@@ -88,10 +90,12 @@ export class PostsService {
     }
 
 
-    async createPost(postData: createPostDto, auther: User): Promise<Post> {
+    async createPost(postData: createPostDto, file: any, auther: User): Promise<Post> {
+        const upload = await this.uploadService.uploadFile(file)
         const newPost = this.postRepositry.create({
             title: postData.title,
             content: postData.content,
+            image: upload.url,
             auther
         })
         await this.invalidateAllCacheData()

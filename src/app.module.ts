@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { User } from './auth/entities/user.entitie';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { CacheModule } from '@nestjs/cache-manager';
       synchronize: true
     }),
     PostsModule,
-    AuthModule],
+    AuthModule,
+    UploadModule],
   controllers: [AppController],
   providers: [AppService],
 })
