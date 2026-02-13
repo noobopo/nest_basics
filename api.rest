@@ -1,0 +1,42 @@
+GET http://localhost:3200/posts/all
+
+###
+GET http://localhost:3200/posts/1
+
+###
+POST http://localhost:3200/auth/register
+Content-Type: application/json
+
+{
+    "name": "Admin",
+    "email": "admin@gmail.com",
+    "password": "Admin@2002"
+}
+
+###
+POST http://localhost:3200/auth/login
+Content-Type: application/json
+
+{
+    "email": "kishalay@gmail.com",
+    "password": "Kishalay@2002"
+}
+
+###
+GET http://localhost:3200/auth/profile
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6Miwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzcwODkzNDM0LCJleHAiOjE3NzA4OTQzMzR9.Pzvz145yyMUs2PUMLc4EGUNKIZQJAcSiOBCgdIl0JrA
+
+###
+POST http://localhost:3200/posts/create
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGdtYWlsLmNvbSIsInN1YiI6Miwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzcwODkzNDM0LCJleHAiOjE3NzA4OTQzMzR9.Pzvz145yyMUs2PUMLc4EGUNKIZQJAcSiOBCgdIl0JrA
+
+{
+    "title": "How to Start A Blog in 2026",
+    "content": "My name is Scott Chow, and I am going to show you how to start blogging today. I have been building blogs and websites since 2002. In that time I have launched several of my own blogs, and helped hundreds of others do the same."
+}
+
+###
+GET  http://localhost:3200/posts/all
+Content-Type: application/json
